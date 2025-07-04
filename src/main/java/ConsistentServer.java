@@ -1,52 +1,27 @@
-import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
 import java.util.TreeSet;
 
+public class ConsistentServer implements LoadBalancer {
+    private final TreeSet<ServerNode> serverData;
 
-class ServerNode{
-    private String host;
-    private int port;
-    ServerNode(String host, int port){
-        this.host = host;
-        this.port = port;
-    }
-
-    public String getHost(){
-        return this.host;
-    }
-
-    public int getPort(){
-        return this.port;
-    }
-}
-
-public class ConsistentServer {
-    private TreeSet<ServerNode> serverData;
-    ConsistentServer(){
+    public ConsistentServer() {
         serverData = new TreeSet<>();
     }
 
-    public void start(int port) throws IOException{
-        try (ServerSocket serverSocket = new ServerSocket(port)) {
-            serverSocket.setReuseAddress(true);
-            System.out.println("🚀 Load balancer listening on port " + port);
-
-            while (true) {
-                Socket clientSocket = serverSocket.accept();
-                new Thread(() -> {
-                    handleClient(clientSocket);
-                }).start();
-            }
-        }
+    @Override
+    public boolean removeServer(ServerNode server) {
+        return serverData.remove(server);
     }
 
-    private void handleClient(Socket clientSocket){
-            
+    @Override
+    public boolean addServer(ServerNode server) {
+        return serverData.add(server);
     }
 
-    private void addServer(String host,int port){
-        ServerNode newNode = new ServerNode(host, port);
-        serverData.add(newNode);
+    @Override
+    public ServerNode getServer(long hash) {
+        if (serverData.isEmpty()) return null;
+        ServerNode dummy = new ServerNode("", 0, hash, "", "", "");
+        TreeSet<ServerNode> tail = (TreeSet<ServerNode>) serverData.tailSet(dummy);
+        return !tail.isEmpty() ? tail.first() : serverData.first();
     }
 }
