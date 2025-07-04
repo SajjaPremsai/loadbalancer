@@ -8,6 +8,14 @@
   <artifactId>loadbalancer</artifactId>
   <version>1.0-SNAPSHOT</version>
 
+  <dependencies>
+    <dependency>
+   <groupId>org.redisson</groupId>
+   <artifactId>redisson</artifactId>
+   <version>3.43.0</version>
+</dependency> 
+  </dependencies>
+
   <build>
     <plugins>
       <plugin>
@@ -26,7 +34,7 @@
         <configuration>
           <archive>
             <manifest>
-              <mainClass>LoadBalancer</mainClass>
+              <mainClass>Main</mainClass>
             </manifest>
           </archive>
           <descriptorRefs>
