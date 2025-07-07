@@ -1,6 +1,4 @@
-docker run -d -p 6379:6379 --name redis-server redis
-
-# 🧠 Distributed DB-Aware Load Balancer
+# 🧠 MetaData Server for Distributed Databases
 
 <p align="center">
   <img src="https://img.shields.io/badge/Java-17-blue?logo=java" />
